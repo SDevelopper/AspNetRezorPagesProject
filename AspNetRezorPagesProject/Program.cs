@@ -26,7 +26,6 @@ namespace AspNetRezorPagesProject
                     options.Cookie.SameSite=SameSiteMode.Strict;
                 });
             builder.Services.AddAuthorization();
-                
 
 
             // Add services to the container.
