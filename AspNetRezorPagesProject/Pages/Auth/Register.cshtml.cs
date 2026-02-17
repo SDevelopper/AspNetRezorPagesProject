@@ -6,10 +6,8 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace AspNetRezorPagesProject.Pages.Auth
 {
-    public class RegisterModel(IAuthService authService) : PageModel
+    public class RegisterModel(IAuthService authService, IAuthCookieService cookieService) : PageModel
     {
-
-        private readonly IAuthService _authService = authService;
         public RegisterDto RegisterDto { get; set; } = new RegisterDto();
         public void OnGet(){}
 
@@ -17,8 +15,10 @@ namespace AspNetRezorPagesProject.Pages.Auth
         {
             if (!ModelState.IsValid) return Page(); 
 
-            var user = await _authService.RegisterAsync(RegisterDto);
+            var user = await authService.RegisterAsync(RegisterDto);
             if (user == null) { return Page(); }
+
+            await cookieService.SignInAsync(HttpContext, user);
 
             return RedirectToPage("/dashboard");
 

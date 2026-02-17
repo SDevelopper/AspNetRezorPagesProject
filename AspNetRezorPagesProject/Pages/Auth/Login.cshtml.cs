@@ -6,21 +6,20 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace AspNetRezorPagesProject.Pages.Auth
 {
-    public class LoginModel(IAuthService authService) : PageModel
+    public class LoginModel(IAuthService authService, IAuthCookieService cookieService) : PageModel
     {
-
-        private readonly IAuthService _authService = authService;
         public LoginDto LoginDto { get; set; } = new LoginDto();
 
         public void OnGet(){}
-
         public async Task<IActionResult> OnPostAsync()
         {
             if (!ModelState.IsValid) { return Page(); }
 
-            var user = await _authService.LoginAsync(LoginDto);
+            var user = await authService.LoginAsync(LoginDto);
 
             if (user == null) { return Page(); }
+
+            await cookieService.SignInAsync(HttpContext, user);
 
             return RedirectToPage("/dashboard");
         }

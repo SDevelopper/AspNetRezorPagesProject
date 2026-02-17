@@ -13,10 +13,9 @@ namespace AspNetRezorPagesProject.Services.Services
 {
     public class AuthService(AppDbContext dbContext) : IAuthService
     {
-        private readonly AppDbContext _dbContext = dbContext;
         public async Task<AuthUser> RegisterAsync(RegisterDto registerDto)
         {
-            if (await _dbContext.Users.AnyAsync(x => x.Email == registerDto.Email))
+            if (await dbContext.Users.AnyAsync(x => x.Email == registerDto.Email))
                 throw new InvalidOperationException("User with this email already exists.");
 
 
@@ -29,8 +28,8 @@ namespace AspNetRezorPagesProject.Services.Services
                 HashPassword = hashedPassword,
             };
 
-            await _dbContext.Users.AddAsync(user);
-            await _dbContext.SaveChangesAsync();
+            await dbContext.Users.AddAsync(user);
+            await dbContext.SaveChangesAsync();
 
             return new AuthUser { 
                 Id = user.Id,
@@ -41,7 +40,7 @@ namespace AspNetRezorPagesProject.Services.Services
 
         public async Task<AuthUser> LoginAsync(LoginDto loginDto)
         {
-            var user = await _dbContext.Users.FirstOrDefaultAsync(x =>
+            var user = await dbContext.Users.FirstOrDefaultAsync(x =>
             x.Email == loginDto.Email);
 
             if (user == null || !(BCryptNet.Verify(loginDto.Password, user.HashPassword)))
@@ -54,11 +53,5 @@ namespace AspNetRezorPagesProject.Services.Services
                 Email = user.Email
             };
         }
-
-        public Task LogoutAsync()
-        {
-            throw new NotImplementedException();
-        }
-
     }
 }

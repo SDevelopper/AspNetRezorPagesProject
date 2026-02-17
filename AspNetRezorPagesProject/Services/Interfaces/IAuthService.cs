@@ -8,6 +8,5 @@ namespace AspNetRezorPagesProject.Services.Interfaces
     {
         Task<AuthUser> RegisterAsync(RegisterDto registerDto);
         Task<AuthUser> LoginAsync(LoginDto loginDto);
-        Task LogoutAsync();
     }
 }
