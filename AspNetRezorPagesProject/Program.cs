@@ -1,4 +1,9 @@
 using AspNetRezorPagesProject.Data;
+using AspNetRezorPagesProject.Services.Interfaces;
+using AspNetRezorPagesProject.Services.Services;
+using AspNetRezorPagesProject.Validators;
+using FluentValidation;
+using FluentValidation.AspNetCore;
 using Microsoft.EntityFrameworkCore;
 
 namespace AspNetRezorPagesProject
@@ -8,6 +13,14 @@ namespace AspNetRezorPagesProject
         public static void Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
+
+            builder.Services.AddScoped<IAuthService, AuthService>();
+
+            builder.Services.AddValidatorsFromAssemblyContaining<RegisterDtoValidator>();
+            builder.Services.AddFluentValidationAutoValidation();
+
+            builder.Services.AddFluentValidationClientsideAdapters();
+
 
             builder.Services.AddDbContext<AppDbContext>(options =>
             options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
@@ -45,6 +58,7 @@ namespace AspNetRezorPagesProject
 
             app.UseRouting();
 
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.MapStaticAssets();
