@@ -8,6 +8,7 @@ namespace AspNetRezorPagesProject.Pages.Auth
 {
     public class LoginModel(IAuthService authService, IAuthCookieService cookieService) : PageModel
     {
+        [BindProperty]
         public LoginDto LoginDto { get; set; } = new LoginDto();
 
         public void OnGet(){}

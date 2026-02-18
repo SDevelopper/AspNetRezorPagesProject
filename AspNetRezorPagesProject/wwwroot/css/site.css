@@ -29,3 +29,80 @@ body {
 .form-floating > .form-control-plaintext:focus::placeholder, .form-floating > .form-control:focus::placeholder {
   text-align: start;
 }
+
+.auth-page {
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    box-sizing: border-box;
+    overflow: hidden;
+    padding: 20px;
+    box-sizing: border-box;
+}
+
+.auth-card {
+    width: 100%;
+    max-width: 400px;
+}
+
+
+.auth-title {
+    text-align: center;
+    margin-bottom: 25px;
+}
+
+.auth-label {
+    margin-bottom: 5px;
+    padding-left: 5px;
+}
+
+.form-group {
+    margin-top: 5px;
+    margin-bottom: 18px;
+}
+
+.form-control {
+    width: 100%;
+    padding: 10px;
+    border-radius: 14px;
+    margin-top: 5px;
+    border: 1px solid #ccc;
+    outline: none;
+    box-sizing: border-box;
+    max-height: 50px; 
+    min-height: 40px;
+}
+
+    .form-control:focus {
+        border-bottom: 3px solid #2563eb; 
+        border-left: none;
+        border-top: 3px solid #2563eb;
+        border-right: none;
+        box-shadow: none;
+    }
+
+.btn-primary {
+    width: 100%;
+    padding: 10px;
+    background-color: #2563eb;
+    border: none;
+    color: white;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+    .btn-primary:hover {
+        background-color: #1e4fd8;
+    }
+
+.text-danger {
+    font-size: 0.85rem;
+    color: #dc2626;
+}
+
+.auth-footer {
+    margin-top: 20px;
+    text-align: center;
+    font-size: 0.9rem;
+}
