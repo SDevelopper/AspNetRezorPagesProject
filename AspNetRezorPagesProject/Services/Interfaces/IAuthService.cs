@@ -6,7 +6,7 @@ namespace AspNetRezorPagesProject.Services.Interfaces
 {
     public interface IAuthService
     {
-        Task<AuthUser> RegisterAsync(RegisterDto registerDto);
-        Task<AuthUser> LoginAsync(LoginDto loginDto);
+        Task<int> RegisterAsync(RegisterDto registerDto);
+        Task<int> LoginAsync(LoginDto loginDto);
     }
 }

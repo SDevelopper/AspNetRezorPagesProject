@@ -8,12 +8,10 @@ namespace AspNetRezorPagesProject.Services.Services
 {
     public class AuthCookieService : IAuthCookieService
     {
-        public async Task SignInAsync(HttpContext httpContext, AuthUser user)
+        public async Task SignInAsync(HttpContext httpContext, int userId)
         {
             var claims = new List<Claim>{
-                new (ClaimTypes.NameIdentifier, user.Id.ToString()),
-                new (ClaimTypes.Name, user.Name ?? ""),
-                new (ClaimTypes.Email, user.Email)
+                new (ClaimTypes.NameIdentifier, userId.ToString())
             };
 
             var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);

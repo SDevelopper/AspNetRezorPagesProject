@@ -13,7 +13,7 @@ namespace AspNetRezorPagesProject.Services.Services
 {
     public class AuthService(AppDbContext dbContext) : IAuthService
     {
-        public async Task<AuthUser> RegisterAsync(RegisterDto registerDto)
+        public async Task<int> RegisterAsync(RegisterDto registerDto)
         {
             if (await dbContext.Users.AnyAsync(x => x.Email == registerDto.Email))
                 throw new InvalidOperationException("User with this email already exists.");
@@ -31,14 +31,11 @@ namespace AspNetRezorPagesProject.Services.Services
             await dbContext.Users.AddAsync(user);
             await dbContext.SaveChangesAsync();
 
-            return new AuthUser { 
-                Id = user.Id,
-                Name = user.Name,
-                Email = user.Email
-            };
+            return user.Id;
+             
         }
 
-        public async Task<AuthUser> LoginAsync(LoginDto loginDto)
+        public async Task<int> LoginAsync(LoginDto loginDto)
         {
             var user = await dbContext.Users.FirstOrDefaultAsync(x =>
             x.Email == loginDto.Email);
@@ -46,12 +43,7 @@ namespace AspNetRezorPagesProject.Services.Services
             if (user == null || !(BCryptNet.Verify(loginDto.Password, user.HashPassword)))
                 throw new InvalidOperationException("Invalid email or password");
 
-            return new AuthUser
-            {
-                Id = user.Id,
-                Name = user.Name,
-                Email = user.Email
-            };
+            return user.Id;
         }
     }
 }

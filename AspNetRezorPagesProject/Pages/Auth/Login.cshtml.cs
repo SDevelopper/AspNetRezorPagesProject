@@ -16,11 +16,11 @@ namespace AspNetRezorPagesProject.Pages.Auth
         {
             if (!ModelState.IsValid) { return Page(); }
 
-            var user = await authService.LoginAsync(LoginDto);
+            var userId = await authService.LoginAsync(LoginDto);
 
-            if (user == null) { return Page(); }
+            if (userId == 0) { return Page(); }
 
-            await cookieService.SignInAsync(HttpContext, user);
+            await cookieService.SignInAsync(HttpContext, userId);
 
             return RedirectToPage("/dashboard");
         }

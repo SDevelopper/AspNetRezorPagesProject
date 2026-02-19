@@ -2,7 +2,7 @@
 
 namespace AspNetRezorPagesProject.Models.ViewsModels
 {
-    public class AuthUser
+    public class UserViewModel
     {
         public int Id { get; set; }
         public string? Name { get; set; }

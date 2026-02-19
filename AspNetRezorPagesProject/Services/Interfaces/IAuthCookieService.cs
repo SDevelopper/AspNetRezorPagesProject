@@ -4,7 +4,7 @@ namespace AspNetRezorPagesProject.Services.Interfaces
 {
     public interface IAuthCookieService
     {
-        Task SignInAsync(HttpContext httpContext, AuthUser user);
+        Task SignInAsync(HttpContext httpContext, int userId);
         Task SignOutAsync(HttpContext httpContext);
     }
 }

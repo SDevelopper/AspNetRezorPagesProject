@@ -1,0 +1,13 @@
+﻿@page
+@model AspNetRezorPagesProject.Pages.DashboardModel
+@{
+    ViewData["Title"] = "Dashboard";
+}
+
+<h2>Dashboard</h2>
+
+<div>
+    <p><strong>ID:</strong> @Model.UserViewModel.Id</p>
+    <p><strong>Name:</strong> @Model.UserViewModel.Name</p>
+    <p><strong>Email:</strong> @Model.UserViewModel.Email</p>
+</div>
