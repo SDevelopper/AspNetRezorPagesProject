@@ -1,4 +1,4 @@
-using AspNetRezorPagesProject.Models.ViewsModels;
+using AspNetRezorPagesProject.Models.ViewModels;
 using AspNetRezorPagesProject.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -10,7 +10,7 @@ namespace AspNetRezorPagesProject.Pages
     [Authorize]
     public class DashboardModel(IDashboardService dashboardService) : PageModel
     {
-        public UserViewModel UserViewModel { get; private set; } = new UserViewModel();
+        public UserViewModel? UserViewModel { get; private set; }
 
         public async Task<IActionResult> OnGetAsync()
         {
@@ -23,7 +23,7 @@ namespace AspNetRezorPagesProject.Pages
             var data = await dashboardService.GetUserDataAsync(userId);
             if (data == null)
             {             
-                return RedirectToPage("/Auth/Login");
+                return RedirectToPage("/Account/Login");
             }
 
             UserViewModel = data;

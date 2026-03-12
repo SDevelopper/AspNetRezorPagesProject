@@ -1,49 +1,109 @@
 ﻿using AspNetRezorPagesProject.Data;
 using AspNetRezorPagesProject.Models.DTO;
-using AspNetRezorPagesProject.Models.ViewsModels;
+using AspNetRezorPagesProject.Models.ViewModels;
 using AspNetRezorPagesProject.Services.Interfaces;
 using Microsoft.EntityFrameworkCore;
-using BCrypt.Net;
 using BCryptNet = BCrypt.Net.BCrypt;
 using AspNetRezorPagesProject.Models.Entity;
-using AspNetRezorPagesProject.Pages.Auth;
+using Microsoft.AspNetCore.WebUtilities;
+using System.Security.Cryptography;
+using System.Text;
+using AutoMapper;
 
 
 namespace AspNetRezorPagesProject.Services.Services
 {
-    public class AuthService(AppDbContext dbContext) : IAuthService
+    public class AuthService(
+        AppDbContext dbContext,
+        IConfiguration configuration,
+        IEmailService emailService,
+        IMapper mapper
+        ) : IAuthService
     {
-        public async Task<int> RegisterAsync(RegisterDto registerDto)
+        public async Task<UserViewModel?> RegisterAsync(RegisterDto registerDto)
         {
-            if (await dbContext.Users.AnyAsync(x => x.Email == registerDto.Email))
-                throw new InvalidOperationException("User with this email already exists.");
+            var normalizedEmail = registerDto.Email
+                .Trim()
+                .ToLowerInvariant();
 
-
-            string hashedPassword = BCryptNet.HashPassword(registerDto.Password, 12);
+            if (await dbContext.Users.AnyAsync(x =>
+            x.Email == normalizedEmail)) { return null; }
 
             var user = new User
             {
-                Name = registerDto.Name,
-                Email = registerDto.Email,
-                HashPassword = hashedPassword,
+                Name = registerDto.Name.Trim(),
+                Email = normalizedEmail,
+                HashPassword = BCryptNet.HashPassword(
+                    registerDto.Password, 12)
             };
 
             await dbContext.Users.AddAsync(user);
             await dbContext.SaveChangesAsync();
 
-            return user.Id;
-             
-        }
+            return mapper.Map<UserViewModel>(user);
+        }       
 
-        public async Task<int> LoginAsync(LoginDto loginDto)
+        public async Task<UserViewModel?> LoginAsync(LoginDto loginDto)
         {
-            var user = await dbContext.Users.FirstOrDefaultAsync(x =>
-            x.Email == loginDto.Email);
+            var normalizedEmail = loginDto.Email
+                .Trim()
+                .ToLowerInvariant();
 
-            if (user == null || !(BCryptNet.Verify(loginDto.Password, user.HashPassword)))
-                throw new InvalidOperationException("Invalid email or password");
+            var user = await dbContext.Users
+                .FirstOrDefaultAsync(x => x.Email == normalizedEmail);
 
-            return user.Id;
+            if (user == null || !BCryptNet.Verify(loginDto.Password, user.HashPassword))
+            { return null; }
+
+            return mapper.Map<UserViewModel>(user);
         }
+
+        public async Task<bool> ForgotPasswordAsync(string email)
+        {
+            var user = await dbContext.Users.FirstOrDefaultAsync(u => 
+            u.Email == email);
+
+            if (user == null) { return true; }
+
+
+            byte[] tokenBytes = RandomNumberGenerator.GetBytes(32);
+            string token = WebEncoders.Base64UrlEncode(tokenBytes);
+
+            string tokenHash = ComputeSha256Hash(token);
+
+            user.Token = tokenHash;
+            user.TokenExpiration = DateTime.UtcNow.AddHours(1);
+
+            await dbContext.SaveChangesAsync();
+
+            string baseUrl = configuration["AppSettings:BaseUrl"]!;
+            string resetLink = $"{baseUrl}/Account/ResetPassword?token={Uri.EscapeDataString(token)}";
+            await emailService.SendPasswordResetEmailAsync(user.Email, resetLink);
+
+            return true;
+        }
+
+        public async Task<bool> ResetPasswordAsync(ResetPasswordDto resetDto)
+        {
+            string tokenHash = ComputeSha256Hash(resetDto.Token!);
+
+            var user = await dbContext.Users.FirstOrDefaultAsync(u =>
+                u.Token == tokenHash &&
+                u.TokenExpiration > DateTime.UtcNow);
+
+            if (user == null){ return false;}
+
+            user.HashPassword = BCryptNet.HashPassword(resetDto.NewPassword, 12);
+
+            user.Token = null;
+            user.TokenExpiration = null;
+
+            await dbContext.SaveChangesAsync();
+
+            return true;
+        }
+
+        private static string ComputeSha256Hash(string rawData) =>
+            Convert.ToHexString(SHA256.HashData(Encoding.UTF8.GetBytes(rawData)));
     }
 }

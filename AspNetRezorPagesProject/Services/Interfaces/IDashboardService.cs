@@ -1,9 +1,9 @@
-﻿using AspNetRezorPagesProject.Models.ViewsModels;
+﻿using AspNetRezorPagesProject.Models.ViewModels;
 
 namespace AspNetRezorPagesProject.Services.Interfaces
 {
     public interface IDashboardService
     {
-        Task<UserViewModel> GetUserDataAsync(int userId);
+        Task<UserViewModel?> GetUserDataAsync(int Id);
     }
 }

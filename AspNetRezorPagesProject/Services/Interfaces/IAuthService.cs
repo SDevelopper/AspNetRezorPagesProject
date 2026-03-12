@@ -1,12 +1,12 @@
 ﻿using AspNetRezorPagesProject.Models.DTO;
-using AspNetRezorPagesProject.Models.Entity;
-using AspNetRezorPagesProject.Models.ViewsModels;
+using AspNetRezorPagesProject.Models.ViewModels;
 
 namespace AspNetRezorPagesProject.Services.Interfaces
 {
     public interface IAuthService
     {
-        Task<int> RegisterAsync(RegisterDto registerDto);
-        Task<int> LoginAsync(LoginDto loginDto);
+        Task<UserViewModel?> RegisterAsync(RegisterDto registerDto);
+        Task<UserViewModel?> LoginAsync(LoginDto loginDto);
+        Task<bool> ForgotPasswordAsync(string email);
     }
 }

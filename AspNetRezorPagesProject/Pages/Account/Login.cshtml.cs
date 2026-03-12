@@ -1,12 +1,14 @@
 using AspNetRezorPagesProject.Models.DTO;
 using AspNetRezorPagesProject.Services.Interfaces;
-using AspNetRezorPagesProject.Validators;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
-namespace AspNetRezorPagesProject.Pages.Auth
+namespace AspNetRezorPagesProject.Pages.Account
 {
-    public class LoginModel(IAuthService authService, IAuthCookieService cookieService) : PageModel
+    public class LoginModel(
+        IAuthService authService, 
+        IAuthCookieService cookieService
+        ) : PageModel
     {
         [BindProperty]
         public LoginDto LoginDto { get; set; } = new LoginDto();
@@ -16,11 +18,11 @@ namespace AspNetRezorPagesProject.Pages.Auth
         {
             if (!ModelState.IsValid) { return Page(); }
 
-            var userId = await authService.LoginAsync(LoginDto);
+            var user = await authService.LoginAsync(LoginDto);
 
-            if (userId == 0) { return Page(); }
+            if (user == null) { return Page(); }
 
-            await cookieService.SignInAsync(HttpContext, userId);
+            await cookieService.SignInAsync(HttpContext, user);
 
             return RedirectToPage("/dashboard");
         }

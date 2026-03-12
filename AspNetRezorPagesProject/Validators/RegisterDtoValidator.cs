@@ -9,28 +9,30 @@ namespace AspNetRezorPagesProject.Validators
         {
             RuleFor(x => x.Name)
                 .NotEmpty()
-                .WithMessage("Name is required")
-                .Length(2, 35)
-                .WithMessage("Name must be between 2 and 35 characters");
+                .WithMessage("The field is required")
+                .MinimumLength(2)
+                .WithMessage("Name must be at least 2 characters long")
+                .MaximumLength(35)
+                .WithMessage("Name cannot exceed 35 characters");
 
             RuleFor(x => x.Email)
                 .NotEmpty()
-                .WithMessage("Email is required")
+                .WithMessage("The field is required")
                 .EmailAddress()
                 .WithMessage("Invalid email format");
 
             RuleFor(x => x.Password)
                 .NotEmpty()
-                .WithMessage("Password is required")
-                .MinimumLength(6)
-                .WithMessage("Password must be at least 6 characters")
+                .WithMessage("The field is required")
+                .MinimumLength(8)
+                .WithMessage("Password must be at least 8 characters")
                 .MaximumLength(50)
                 .WithMessage("Password cannot exceed 50 characters");
 
 
             RuleFor(x => x.ConfirmPassword)
                 .NotEmpty()
-                .WithMessage("Confirm Password is required")
+                .WithMessage("The field is required")
                 .Equal(x => x.Password)
                 .WithMessage("Passwords do not match");
         }

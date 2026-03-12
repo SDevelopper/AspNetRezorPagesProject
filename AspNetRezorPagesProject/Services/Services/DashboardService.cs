@@ -1,41 +1,24 @@
 ﻿using AspNetRezorPagesProject.Data;
-using AspNetRezorPagesProject.Models.ViewsModels;
+using AspNetRezorPagesProject.Models.ViewModels;
 using AspNetRezorPagesProject.Services.Interfaces;
+using AutoMapper;
 using Microsoft.EntityFrameworkCore;
-
+using AutoMapper.QueryableExtensions;
 namespace AspNetRezorPagesProject.Services.Services
 {
-    public class DashboardService(AppDbContext dbContext) : IDashboardService
+    public class DashboardService(
+        AppDbContext dbContext,
+        IMapper mapper
+        ) : IDashboardService
     {
-        public async Task<UserViewModel?> GetUserDataAsync(int userId)
+        public async Task<UserViewModel?> GetUserDataAsync(int Id)
         {
             
             return await dbContext.Users
                 .AsNoTracking()
-                .Where(x => x.Id == userId)
-                .Select(user => new UserViewModel
-                {
-                    Id = user.Id,
-                    Name = user.Name,
-                    Email = user.Email
-                })
+                .Where(x => x.Id == Id)
+                .ProjectTo<UserViewModel>(mapper.ConfigurationProvider)
                 .FirstOrDefaultAsync();
         }
-        //public async Task<UserViewModel> GetUserDataAsync(int userId)
-        //{
-
-        //    var user = await dbContext.Users.AsNoTracking().FirstOrDefaultAsync( x =>
-        //    x.Id == userId);
-
-        //    if (user == null)
-        //        throw new InvalidOperationException("User not found");
-
-        //    return new UserViewModel
-        //    {
-        //        Id = userId,
-        //        Name = user.Name,
-        //        Email = user.Email
-        //    };
-        //}
     }
 }

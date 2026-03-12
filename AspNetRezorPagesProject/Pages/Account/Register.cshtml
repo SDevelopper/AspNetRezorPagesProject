@@ -1,5 +1,5 @@
 ﻿@page
-@model AspNetRezorPagesProject.Pages.Auth.RegisterModel
+@model AspNetRezorPagesProject.Pages.Account.RegisterModel
 @{
     Layout = "_AuthLayout";
     ViewData["Title"] = "Registration";
@@ -12,25 +12,25 @@
     <form method="post" novalidate>
 
         <div class="form-group">
-            <label asp-for="RegisterDto.Name" class="auth-label">Name</label>
+            <label asp-for="RegisterDto.Name" class="auth-label">Имя</label>
             <input asp-for="RegisterDto.Name" class="form-control" />
             <span asp-validation-for="RegisterDto.Name" class="text-danger"></span>
         </div>
 
         <div class="form-group">
-            <label asp-for="RegisterDto.Email" class="auth-label">Email</label>
+            <label asp-for="RegisterDto.Email" class="auth-label">Электронная почта</label>
             <input asp-for="RegisterDto.Email" class="form-control" />
             <span asp-validation-for="RegisterDto.Email" class="text-danger"></span>
         </div>
 
         <div class="form-group">
-            <label asp-for="RegisterDto.Password" class="auth-label">Password</label>
+            <label asp-for="RegisterDto.Password" class="auth-label">Пароль</label>
             <input asp-for="RegisterDto.Password" type="password" class="form-control" />
             <span asp-validation-for="RegisterDto.Password" class="text-danger"></span>
         </div>
 
         <div class="form-group">
-            <label asp-for="RegisterDto.ConfirmPassword" class="auth-label">Confirm password</label>
+            <label asp-for="RegisterDto.ConfirmPassword" class="auth-label">Подтвердить пароль</label>
             <input asp-for="RegisterDto.ConfirmPassword" type="password" class="form-control" />
             <span asp-validation-for="RegisterDto.ConfirmPassword" class="text-danger"></span>
         </div>
@@ -38,14 +38,13 @@
         <button type="submit" class="btn-primary">Зарегистрироваться</button>
 
         <div class="auth-footer">
-            <span>Already have an account?</span>
-            <a asp-page="/Auth/Login">Log in</a>
+            <span>Есть аккаунт?</span>
+            <a asp-page="/Account/Login">Войти</a>
         </div>
 
     </form>
 
 </div>
-
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
 }

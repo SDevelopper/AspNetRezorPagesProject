@@ -1,11 +1,8 @@
-﻿using System.ComponentModel.DataAnnotations;
-
-namespace AspNetRezorPagesProject.Models.ViewsModels
+﻿namespace AspNetRezorPagesProject.Models.ViewModels
 {
-    public class UserViewModel
-    {
-        public int Id { get; set; }
-        public string? Name { get; set; }
-        public string Email { get; set; } = string.Empty;
-    }
+    public record UserViewModel(
+        int Id, 
+        string Name, 
+        string Email
+        );
 }

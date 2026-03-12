@@ -1,4 +1,5 @@
 using AspNetRezorPagesProject.Data;
+using AspNetRezorPagesProject.Mappings;
 using AspNetRezorPagesProject.Services.Interfaces;
 using AspNetRezorPagesProject.Services.Services;
 using AspNetRezorPagesProject.Validators;
@@ -16,13 +17,20 @@ namespace AspNetRezorPagesProject
             var builder = WebApplication.CreateBuilder(args);
 
             builder.Services.AddScoped<IAuthService, AuthService>();
+            builder.Services.AddScoped<IEmailService, EmailService>();
+            builder.Services.AddScoped<IDashboardService, DashboardService>();
             builder.Services.AddScoped<IAuthCookieService, AuthCookieService>();
+
+
 
             builder.Services.AddValidatorsFromAssemblyContaining<RegisterDtoValidator>();
             builder.Services.AddFluentValidationAutoValidation();
 
             builder.Services.AddFluentValidationClientsideAdapters();
 
+            builder.Services.AddAutoMapper(typeof(UserProfile));
+
+            //builder.Services.AddAutoMapper(typeof(UserProfile).Assembly);
 
             builder.Services.AddDbContext<AppDbContext>(options =>
             options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
@@ -30,8 +38,8 @@ namespace AspNetRezorPagesProject
             builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
                 .AddCookie(CookieAuthenticationDefaults.AuthenticationScheme, options =>
                 {
-                    options.LoginPath ="/Auth/Login";
-                    options.LogoutPath = "/Auth/Logout";
+                    options.LoginPath ="/Account/Login";
+                    options.LogoutPath = "/Account/Logout";
 
                     options.ExpireTimeSpan=TimeSpan.FromDays(7);
                     options.SlidingExpiration=true;
@@ -47,14 +55,6 @@ namespace AspNetRezorPagesProject
             builder.Services.AddRazorPages();
 
             var app = builder.Build();
-
-            // Configure the HTTP request pipeline.
-            if (!app.Environment.IsDevelopment())
-            {
-                app.UseExceptionHandler("/Error");
-                // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
-                app.UseHsts();
-            }
 
             app.UseHttpsRedirection();
 
