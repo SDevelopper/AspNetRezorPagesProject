@@ -22,7 +22,7 @@ namespace AspNetRezorPagesProject.Services.Services
     {
         public async Task<UserViewModel?> RegisterAsync(RegisterDto registerDto)
         {
-            var normalizedEmail = registerDto.Email
+            var normalizedEmail = registerDto.Email!
                 .Trim()
                 .ToLowerInvariant();
 
@@ -31,10 +31,9 @@ namespace AspNetRezorPagesProject.Services.Services
 
             var user = new User
             {
-                Name = registerDto.Name.Trim(),
+                Name = registerDto.Name!.Trim(),
                 Email = normalizedEmail,
-                HashPassword = BCryptNet.HashPassword(
-                    registerDto.Password, 12)
+                HashPassword = BCryptNet.HashPassword(registerDto.Password, 12)
             };
 
             await dbContext.Users.AddAsync(user);
@@ -45,7 +44,7 @@ namespace AspNetRezorPagesProject.Services.Services
 
         public async Task<UserViewModel?> LoginAsync(LoginDto loginDto)
         {
-            var normalizedEmail = loginDto.Email
+            var normalizedEmail = loginDto.Email!
                 .Trim()
                 .ToLowerInvariant();
 
@@ -60,11 +59,11 @@ namespace AspNetRezorPagesProject.Services.Services
 
         public async Task<bool> ForgotPasswordAsync(string email)
         {
-            var user = await dbContext.Users.FirstOrDefaultAsync(u => 
-            u.Email == email);
+            var user = await dbContext.Users.FirstOrDefaultAsync(u => u.Email == email);
 
-            if (user == null) { return true; }
-
+            if (user == null){
+                return true;
+            }
 
             byte[] tokenBytes = RandomNumberGenerator.GetBytes(32);
             string token = WebEncoders.Base64UrlEncode(tokenBytes);
@@ -77,7 +76,9 @@ namespace AspNetRezorPagesProject.Services.Services
             await dbContext.SaveChangesAsync();
 
             string baseUrl = configuration["AppSettings:BaseUrl"]!;
-            string resetLink = $"{baseUrl}/Account/ResetPassword?token={Uri.EscapeDataString(token)}";
+            string resetLink = $"{baseUrl}/Account/ResetPassword?token=" +
+                $"{Uri.EscapeDataString(token)}&email={Uri.EscapeDataString(user.Email)}";
+
             await emailService.SendPasswordResetEmailAsync(user.Email, resetLink);
 
             return true;
@@ -85,13 +86,20 @@ namespace AspNetRezorPagesProject.Services.Services
 
         public async Task<bool> ResetPasswordAsync(ResetPasswordDto resetDto)
         {
-            string tokenHash = ComputeSha256Hash(resetDto.Token!);
+            if (string.IsNullOrEmpty(resetDto.Token) || string.IsNullOrEmpty(resetDto.Email))
+            {
+                return false;
+            }
 
-            var user = await dbContext.Users.FirstOrDefaultAsync(u =>
-                u.Token == tokenHash &&
-                u.TokenExpiration > DateTime.UtcNow);
+            var user = await dbContext.Users.FirstOrDefaultAsync(u => u.Email == resetDto.Email);
 
-            if (user == null){ return false;}
+            if (user == null) { return false;}
+
+            string TokenHash = ComputeSha256Hash(resetDto.Token);
+
+            if (user.Token != TokenHash || user.TokenExpiration <= DateTime.UtcNow){
+                return false;
+            }
 
             user.HashPassword = BCryptNet.HashPassword(resetDto.NewPassword, 12);
 

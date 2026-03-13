@@ -25,12 +25,10 @@ namespace AspNetRezorPagesProject
 
             builder.Services.AddValidatorsFromAssemblyContaining<RegisterDtoValidator>();
             builder.Services.AddFluentValidationAutoValidation();
-
+       
             builder.Services.AddFluentValidationClientsideAdapters();
 
             builder.Services.AddAutoMapper(typeof(UserProfile));
-
-            //builder.Services.AddAutoMapper(typeof(UserProfile).Assembly);
 
             builder.Services.AddDbContext<AppDbContext>(options =>
             options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));

@@ -4,18 +4,17 @@ namespace AspNetRezorPagesProject.Validators
 {
     public class LoginDtoValidator : AbstractValidator<LoginDto>
     {
-        public LoginDtoValidator() 
+        public LoginDtoValidator()
         {
-
             RuleFor(x => x.Email)
                 .NotEmpty()
-                .WithMessage("The field is required")
+                .WithMessage("Поле обязательно для заполнения")
                 .EmailAddress()
-                .WithMessage("Invalid email format");
+                .WithMessage("Введите корректный адрес электронной почты");
 
             RuleFor(x => x.Password)
                 .NotEmpty()
-                .WithMessage("The field is required");
+                .WithMessage("Поле обязательно для заполнения");
         }
     }
 }

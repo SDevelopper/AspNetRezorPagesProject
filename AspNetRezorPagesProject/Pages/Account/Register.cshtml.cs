@@ -11,14 +11,14 @@ namespace AspNetRezorPagesProject.Pages.Account
         ) : PageModel
     {
         [BindProperty]
-        public RegisterDto RegisterDto { get; set; } = new RegisterDto();
+        public RegisterDto Input { get; set; } = new();
         public void OnGet() { }
 
         public async Task<IActionResult> OnPostAsync()
         {
             if (!ModelState.IsValid) return Page();
 
-            var user = await authService.RegisterAsync(RegisterDto);
+            var user = await authService.RegisterAsync(Input);
             if (user == null) { return Page(); }
 
             await cookieService.SignInAsync(HttpContext, user);

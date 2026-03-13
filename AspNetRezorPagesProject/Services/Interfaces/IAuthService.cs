@@ -8,5 +8,6 @@ namespace AspNetRezorPagesProject.Services.Interfaces
         Task<UserViewModel?> RegisterAsync(RegisterDto registerDto);
         Task<UserViewModel?> LoginAsync(LoginDto loginDto);
         Task<bool> ForgotPasswordAsync(string email);
+        Task<bool> ResetPasswordAsync(ResetPasswordDto resetDto);
     }
 }

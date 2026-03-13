@@ -13,7 +13,6 @@ namespace AspNetRezorPagesProject.Services.Services
     {
         public async Task<UserViewModel?> GetUserDataAsync(int Id)
         {
-            
             return await dbContext.Users
                 .AsNoTracking()
                 .Where(x => x.Id == Id)

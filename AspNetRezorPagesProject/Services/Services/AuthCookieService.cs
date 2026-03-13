@@ -39,7 +39,6 @@ namespace AspNetRezorPagesProject.Services.Services
                 );
         }
 
-
         public async Task SignOutAsync(HttpContext httpContext)
         {
             await httpContext.SignOutAsync(

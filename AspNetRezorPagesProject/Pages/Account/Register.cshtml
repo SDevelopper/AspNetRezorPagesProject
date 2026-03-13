@@ -12,27 +12,27 @@
     <form method="post" novalidate>
 
         <div class="form-group">
-            <label asp-for="RegisterDto.Name" class="auth-label">Имя</label>
-            <input asp-for="RegisterDto.Name" class="form-control" />
-            <span asp-validation-for="RegisterDto.Name" class="text-danger"></span>
+            <label asp-for="Input.Name" class="auth-label">Имя</label>
+            <input asp-for="Input.Name" class="form-control" />
+            <span asp-validation-for="Input.Name" class="text-danger"></span>
         </div>
 
         <div class="form-group">
-            <label asp-for="RegisterDto.Email" class="auth-label">Электронная почта</label>
-            <input asp-for="RegisterDto.Email" class="form-control" />
-            <span asp-validation-for="RegisterDto.Email" class="text-danger"></span>
+            <label asp-for="Input.Email" class="auth-label">Электронная почта</label>
+            <input asp-for="Input.Email" class="form-control" />
+            <span asp-validation-for="Input.Email" class="text-danger"></span>
         </div>
 
         <div class="form-group">
-            <label asp-for="RegisterDto.Password" class="auth-label">Пароль</label>
-            <input asp-for="RegisterDto.Password" type="password" class="form-control" />
-            <span asp-validation-for="RegisterDto.Password" class="text-danger"></span>
+            <label asp-for="Input.Password" class="auth-label">Пароль</label>
+            <input asp-for="Input.Password" type="password" class="form-control" />
+            <span asp-validation-for="Input.Password" class="text-danger"></span>
         </div>
 
         <div class="form-group">
-            <label asp-for="RegisterDto.ConfirmPassword" class="auth-label">Подтвердить пароль</label>
-            <input asp-for="RegisterDto.ConfirmPassword" type="password" class="form-control" />
-            <span asp-validation-for="RegisterDto.ConfirmPassword" class="text-danger"></span>
+            <label asp-for="Input.ConfirmPassword" class="auth-label">Подтвердить пароль</label>
+            <input asp-for="Input.ConfirmPassword" type="password" class="form-control" />
+            <span asp-validation-for="Input.ConfirmPassword" class="text-danger"></span>
         </div>
 
         <button type="submit" class="btn-primary">Зарегистрироваться</button>

@@ -5,36 +5,35 @@ namespace AspNetRezorPagesProject.Validators
 {
     public class RegisterDtoValidator : AbstractValidator<RegisterDto>
     {
-        public RegisterDtoValidator() 
+        public RegisterDtoValidator()
         {
             RuleFor(x => x.Name)
                 .NotEmpty()
-                .WithMessage("The field is required")
+                .WithMessage("Поле обязательно для заполнения")
                 .MinimumLength(2)
-                .WithMessage("Name must be at least 2 characters long")
+                .WithMessage("Имя должно содержать минимум 2 символа")
                 .MaximumLength(35)
-                .WithMessage("Name cannot exceed 35 characters");
+                .WithMessage("Имя не должно превышать 35 символов");
 
             RuleFor(x => x.Email)
                 .NotEmpty()
-                .WithMessage("The field is required")
+                .WithMessage("Поле обязательно для заполнения")
                 .EmailAddress()
-                .WithMessage("Invalid email format");
+                .WithMessage("Введите корректный адрес электронной почты");
 
             RuleFor(x => x.Password)
                 .NotEmpty()
-                .WithMessage("The field is required")
+                .WithMessage("Поле обязательно для заполнения")
                 .MinimumLength(8)
-                .WithMessage("Password must be at least 8 characters")
+                .WithMessage("Пароль должен содержать минимум 8 символов")
                 .MaximumLength(50)
-                .WithMessage("Password cannot exceed 50 characters");
-
+                .WithMessage("Пароль не должен превышать 50 символов");
 
             RuleFor(x => x.ConfirmPassword)
                 .NotEmpty()
-                .WithMessage("The field is required")
+                .WithMessage("Поле обязательно для заполнения")
                 .Equal(x => x.Password)
-                .WithMessage("Passwords do not match");
+                .WithMessage("Пароли не совпадают");
         }
     }
 }
